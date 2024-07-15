@@ -13,7 +13,7 @@ function App() {
     <Logo/>
     <Form onAddItems={handleAddItems}/>
     <PackedList items={items}/>
-    <Footer/>
+    <Footer  items={items}/>
     </div>
   );
 }
@@ -75,16 +75,32 @@ function Item({item}) {
 }
 
 function PackedList({items}) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+
+  if (sortBy === "input") sortedItems = items;
+
+  if (sortBy === "description")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === "packed")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
+
   return (
     <div className='list'>
     <ul>
-    {items.map((item) => (
+    {sortedItems.map((item) => (
          <Item key={item.id} item={item} />
         
     ))}
       </ul>
       <div className="actions">
-        <select>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option value="input">Sort by input order</option>
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
@@ -95,11 +111,11 @@ function PackedList({items}) {
   )
 }
 
-function Footer() {
+function Footer({ items }) {
   return (
     <>
     <footer className='stats'>
-    💼 You have 2 items on your list, and you already packed 0 (0%)
+    {`💼 You have ${ items.length } items on your list, and you already packed 0 (0%)`}
     </footer>
     </>
   )
