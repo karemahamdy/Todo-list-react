@@ -1,11 +1,13 @@
 
 import './index.css';
+import { useState } from 'react';
 
 function App() {
   return (
     <div className="app">
     <Logo/>
     <Form/>
+    
     <PackedList/>
     <Footer/>
     </div>
@@ -19,23 +21,43 @@ function Logo() {
 }
 
 function Form() {
+  const [description, SetDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    
+  }
   return(
-    <form className='add-form'>
+    <form className='add-form' onClick={handleSubmit}>
     <h3>What do you need for your 😍 trip?
     </h3>
     <select
-    value={0} >
+      value={quantity} onChange={(e) =>setQuantity(Number(e.target.value))}>
     {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-      <option value={num} key={num}>
+      <option value={num} key={num} >
         {num}
       </option>
     ))}
   </select>
-  <input placeholder='item..'></input>
+  <input
+   placeholder='item..'
+    value={description}
+     onChange={(e) => SetDescription(e.target.value)}/>
   <button>Add</button>
     </form>
   )
 }
+
+// function Item() {
+//   return(
+//     <input
+//     type="checkbox"
+  
+//   />
+//   )
+// }
 
 function PackedList() {
   return (
