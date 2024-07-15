@@ -4,15 +4,32 @@ import { useState } from 'react';
 
 function App() {
   const [items, setItems] = useState([]);
+
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
   }
+  function handleDeleteItem(id) {
+    setItems((items) => items.filter((item) => item.id !== id));
+  }
 
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+  function handleClearList() {
+    setItems([])
+  }
   return (
     <div className="app">
     <Logo/>
     <Form onAddItems={handleAddItems}/>
-    <PackedList items={items}/>
+    <PackedList items={items}
+    onClearList={handleClearList}
+    onDeleteItem={handleDeleteItem}
+    onToggleItem={handleToggleItem}/>
     <Footer  items={items}/>
     </div>
   );
@@ -58,23 +75,23 @@ function Form({onAddItems}) {
   )
 }
 
-function Item({item}) {
+function Item({item, onDeleteItem, onToggleItem}) {
   return(
     <li>
     <input
       type="checkbox"
-      value={item}
-      
+      value={item.packed}
+      onChange={() => onToggleItem(item.id)}
     />
     <span style={item.packed ? { textDecoration: "line-through" } : {}}>
       {item.quantity} {item.description}
     </span>
-    <button>❌</button>
+    <button onClick={() => onDeleteItem(item.id)}>❌</button>
   </li>
   )
 }
 
-function PackedList({items}) {
+function PackedList({items, onClearList, onDeleteItem, onToggleItem}) {
   const [sortBy, setSortBy] = useState("input");
 
   let sortedItems;
@@ -95,7 +112,8 @@ function PackedList({items}) {
     <div className='list'>
     <ul>
     {sortedItems.map((item) => (
-         <Item key={item.id} item={item} />
+         <Item key={item.id} item={item}   onDeleteItem={onDeleteItem}
+         onToggleItem={onToggleItem}/>
         
     ))}
       </ul>
@@ -105,7 +123,7 @@ function PackedList({items}) {
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
         </select>
-        <button>Clear list</button>
+        <button onClick={onClearList}>Clear list</button>
       </div>
     </div>
   )
