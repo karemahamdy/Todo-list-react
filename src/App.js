@@ -80,7 +80,7 @@ function PackedList({items}) {
     <ul>
     {items.map((item) => (
          <Item key={item.id} item={item} />
-          />
+        
     ))}
       </ul>
       <div className="actions">
