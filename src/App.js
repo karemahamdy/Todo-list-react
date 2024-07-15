@@ -3,12 +3,16 @@ import './index.css';
 import { useState } from 'react';
 
 function App() {
+  const [items, setItems] = useState([]);
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div className="app">
     <Logo/>
-    <Form/>
-    
-    <PackedList/>
+    <Form onAddItems={handleAddItems}/>
+    <PackedList items={items}/>
     <Footer/>
     </div>
   );
@@ -34,7 +38,7 @@ function Form({onAddItems}) {
   }
   
   return(
-    <form className='add-form' onClick={handleSubmit}>
+    <form className='add-form' onSubmit={handleSubmit}>
     <h3>What do you need for your 😍 trip?
     </h3>
     <select
@@ -54,19 +58,31 @@ function Form({onAddItems}) {
   )
 }
 
-// function Item() {
-//   return(
-//     <input
-//     type="checkbox"
-  
-//   />
-//   )
-// }
+function Item({item}) {
+  return(
+    <li>
+    <input
+      type="checkbox"
+      value={item}
+      
+    />
+    <span style={item.packed ? { textDecoration: "line-through" } : {}}>
+      {item.quantity} {item.description}
+    </span>
+    <button>❌</button>
+  </li>
+  )
+}
 
-function PackedList() {
+function PackedList({items}) {
   return (
     <div className='list'>
-      <p>items</p>
+    <ul>
+    {items.map((item) => (
+         <Item key={item.id} item={item} />
+          />
+    ))}
+      </ul>
       <div className="actions">
         <select>
           <option value="input">Sort by input order</option>
