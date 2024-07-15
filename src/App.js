@@ -37,7 +37,7 @@ function App() {
 
 function Logo() {
   return (
-    <h1>🏝️ Far Away 🧳</h1>
+    <h1>🏝️ packing List 🧳</h1>
   )
 }
 
